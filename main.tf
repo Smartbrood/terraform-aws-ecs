@@ -104,8 +104,8 @@ module "ecs_public_c" {
 
 data "null_data_source" "values" {
   inputs = {
-    zone_a_public_ip  = "${module.ecs_public_a.public_ip}"
-    zone_b_public_ip  = "${module.ecs_public_b.public_ip}"
-    zone_c_public_ip  = "${module.ecs_public_c.public_ip}"
+    zone_a_public_ip  = "${join(",", module.ecs_public_a.public_ip)}"
+    zone_b_public_ip  = "${join(",", module.ecs_public_b.public_ip)}"
+    zone_c_public_ip  = "${join(",", module.ecs_public_c.public_ip)}"
   }
 }
