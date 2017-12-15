@@ -1,4 +1,3 @@
-output "key_name" {
-  description = "SSH key name"
-  value = "${aws_key_pair.imported.key_name}"
+output "data_source_values" {
+  value = "${data.null_data_source.values.outputs}"
 }

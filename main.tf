@@ -1,9 +1,22 @@
-resource "aws_ecs_cluster" "default" {
-    name = "${var.ecs_cluster_name}"
+resource "aws_ecs_cluster" "this" {
+    name = "${var.cluster_name}"
 }
 
 resource "random_pet" "this" {
   length = "1"
+}
+
+data "template_file" "user_data" {
+  template = "${file("${path.module}/templates/user_data.sh.tpl")}"
+
+  vars {
+    cluster_name      = "${var.cluster_name}"
+  }
+}
+
+module "ecs_ami" {
+    source = "Smartbrood/data-ami/aws"
+    distribution = "ecs"
 }
 
 module "ec2_iam_role" {
@@ -21,27 +34,78 @@ module "ec2_iam_role" {
 module "security_group" {
     source      = "Smartbrood/security-group/aws"
     name        = "ecs-${random_pet.this.id}"
-    description = "For ETCD"
+    description = "For ECS"
     vpc_id      = "${var.vpc}"
     tags        = "${var.tags}"
     ingress_rules_from_any  = ["any"]
     egress_rules_to_any     = ["any"]
-
 }
 
-module "ecs_a" {
+module "ecs_public_a" {
     source = "Smartbrood/ec2-instance/aws"
-    name                 = "ecs_a"
-    count                = "1" 
-    ami                  = "${data.aws_ami.ubuntu1604.id}"
-    instance_type        = "t2.micro"
+    name                 = "ecs_public_a"
+    count                = "${var.count_public_a}" 
+    instance_type        = "${var.instance_type}"
     key_name             = "${var.key_name}"
-    iam_instance_profile = "${var.profile_name}"
-    subnet_id            = "${var.subnet_id}"
+    subnet_id            = "${var.subnet_public_zone_a}"
 
-    vpc_security_group_ids      = ["${var.security_group_id}"]
-    associate_public_ip_address = false
+    ami                  = "${module.ecs_ami.ami_id}"
+    iam_instance_profile = "${module.ec2_iam_role.profile_name}"
+    vpc_security_group_ids      = ["${module.security_group.id}"]
+
+    associate_public_ip_address = true
     monitoring                  = false
 
+    user_data            = "${data.template_file.user_data.rendered}"
+
     tags = "${var.tags}"
+}
+
+module "ecs_public_b" {
+    source = "Smartbrood/ec2-instance/aws"
+    name                 = "ecs_public_b"
+    count                = "${var.count_public_b}" 
+    instance_type        = "${var.instance_type}"
+    key_name             = "${var.key_name}"
+    subnet_id            = "${var.subnet_public_zone_b}"
+
+    ami                  = "${module.ecs_ami.ami_id}"
+    iam_instance_profile = "${module.ec2_iam_role.profile_name}"
+    vpc_security_group_ids      = ["${module.security_group.id}"]
+
+    associate_public_ip_address = true
+    monitoring                  = false
+
+    user_data            = "${data.template_file.user_data.rendered}"
+
+    tags = "${var.tags}"
+}
+
+module "ecs_public_c" {
+    source = "Smartbrood/ec2-instance/aws"
+    name                 = "ecs_public_c"
+    count                = "${var.count_public_c}" 
+    instance_type        = "${var.instance_type}"
+    key_name             = "${var.key_name}"
+    subnet_id            = "${var.subnet_public_zone_c}"
+
+    ami                  = "${module.ecs_ami.ami_id}"
+    iam_instance_profile = "${module.ec2_iam_role.profile_name}"
+    vpc_security_group_ids      = ["${module.security_group.id}"]
+
+    associate_public_ip_address = true
+    monitoring                  = false
+
+    user_data            = "${data.template_file.user_data.rendered}"
+
+    tags = "${var.tags}"
+}
+
+
+data "null_data_source" "values" {
+  inputs = {
+    zone_a_public_ip  = "${module.ecs_public_a.public_ip}"
+    zone_b_public_ip  = "${module.ecs_public_b.public_ip}"
+    zone_c_public_ip  = "${module.ecs_public_c.public_ip}"
+  }
 }
