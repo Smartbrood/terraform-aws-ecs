@@ -51,7 +51,7 @@ module "ecs_public_a" {
 
     ami                  = "${module.ecs_ami.ami_id}"
     iam_instance_profile = "${module.ec2_iam_role.profile_name}"
-    vpc_security_group_ids      = ["${module.security_group.id}"]
+    vpc_security_group_ids      = ["${module.security_group.security_group_id}"]
 
     associate_public_ip_address = true
     monitoring                  = false
@@ -71,7 +71,7 @@ module "ecs_public_b" {
 
     ami                  = "${module.ecs_ami.ami_id}"
     iam_instance_profile = "${module.ec2_iam_role.profile_name}"
-    vpc_security_group_ids      = ["${module.security_group.id}"]
+    vpc_security_group_ids      = ["${module.security_group.security_group_id}"]
 
     associate_public_ip_address = true
     monitoring                  = false
@@ -91,7 +91,7 @@ module "ecs_public_c" {
 
     ami                  = "${module.ecs_ami.ami_id}"
     iam_instance_profile = "${module.ec2_iam_role.profile_name}"
-    vpc_security_group_ids      = ["${module.security_group.id}"]
+    vpc_security_group_ids      = ["${module.security_group.security_group_id}"]
 
     associate_public_ip_address = true
     monitoring                  = false
