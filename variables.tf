@@ -6,6 +6,10 @@ variable "security_group" {
   description = "The ID of security group."
 }
 
+variable "pet_name" {
+  description = "Random name - used as part of ec2_iam_role name."
+}
+
 variable "efs_dir" {
   description = "The directory to mount EFS volume."
   default     = "/efs"
