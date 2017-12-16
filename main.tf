@@ -48,6 +48,8 @@ module "ecs_public_a" {
     associate_public_ip_address = true
     monitoring                  = false
 
+    root_block_device      = [{ delete_on_termination = false }]
+
     user_data            = "${data.template_file.user_data_public.rendered}"
 
     tags = "${var.tags}"
@@ -68,6 +70,8 @@ module "ecs_public_b" {
     associate_public_ip_address = true
     monitoring                  = false
 
+    root_block_device      = [{ delete_on_termination = false }]
+
     user_data            = "${data.template_file.user_data_public.rendered}"
 
     tags = "${var.tags}"
@@ -87,6 +91,8 @@ module "ecs_public_c" {
 
     associate_public_ip_address = true
     monitoring                  = false
+
+    root_block_device      = [{ delete_on_termination = false }]
 
     user_data            = "${data.template_file.user_data_public.rendered}"
 
