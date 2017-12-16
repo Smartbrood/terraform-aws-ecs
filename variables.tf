@@ -2,8 +2,17 @@ variable "cluster_name" {
   description = "ECS cluster Name"
 }
 
-variable "vpc" {
-  description = "The ID of VPC."
+variable "security_group" {
+  description = "The ID of security group."
+}
+
+variable "efs_dir" {
+  description = "The directory to mount EFS volume."
+  default     = "/efs"
+}
+
+variable "efs_volume" {
+  description = "The EFS volume."
 }
 
 variable "tags" {

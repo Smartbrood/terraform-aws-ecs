@@ -6,11 +6,17 @@ resource "random_pet" "this" {
   length = "1"
 }
 
-data "template_file" "user_data" {
+data "template_file" "user_data_public" {
   template = "${file("${path.module}/templates/user_data.sh.tpl")}"
 
   vars {
-    cluster_name      = "${var.cluster_name}"
+    cluster_name = "${var.cluster_name}"
+    efs_volume   = "${var.efs_volume}"
+    efs_dir      = "${var.efs_dir}"
+    frontend     = "true"
+    application  = "true"
+    database     = "true"
+    spot         = "false"    
   }
 }
 
@@ -31,16 +37,6 @@ module "ec2_iam_role" {
    ]
 }
 
-module "security_group" {
-    source      = "Smartbrood/security-group/aws"
-    name        = "ecs-${random_pet.this.id}"
-    description = "For ECS"
-    vpc_id      = "${var.vpc}"
-    tags        = "${var.tags}"
-    ingress_rules_from_any  = ["any"]
-    egress_rules_to_any     = ["any"]
-}
-
 module "ecs_public_a" {
     source = "Smartbrood/ec2-instance/aws"
     name                 = "ecs_public_a"
@@ -51,12 +47,12 @@ module "ecs_public_a" {
 
     ami                  = "${module.ecs_ami.ami_id}"
     iam_instance_profile = "${module.ec2_iam_role.profile_name}"
-    vpc_security_group_ids      = ["${module.security_group.security_group_id}"]
+    vpc_security_group_ids      = ["${var.security_group}"]
 
     associate_public_ip_address = true
     monitoring                  = false
 
-    user_data            = "${data.template_file.user_data.rendered}"
+    user_data            = "${data.template_file.user_data_public.rendered}"
 
     tags = "${var.tags}"
 }
@@ -71,12 +67,12 @@ module "ecs_public_b" {
 
     ami                  = "${module.ecs_ami.ami_id}"
     iam_instance_profile = "${module.ec2_iam_role.profile_name}"
-    vpc_security_group_ids      = ["${module.security_group.security_group_id}"]
+    vpc_security_group_ids      = ["${var.security_group}"]
 
     associate_public_ip_address = true
     monitoring                  = false
 
-    user_data            = "${data.template_file.user_data.rendered}"
+    user_data            = "${data.template_file.user_data_public.rendered}"
 
     tags = "${var.tags}"
 }
@@ -91,12 +87,12 @@ module "ecs_public_c" {
 
     ami                  = "${module.ecs_ami.ami_id}"
     iam_instance_profile = "${module.ec2_iam_role.profile_name}"
-    vpc_security_group_ids      = ["${module.security_group.security_group_id}"]
+    vpc_security_group_ids      = ["${var.security_group}"]
 
     associate_public_ip_address = true
     monitoring                  = false
 
-    user_data            = "${data.template_file.user_data.rendered}"
+    user_data            = "${data.template_file.user_data_public.rendered}"
 
     tags = "${var.tags}"
 }
