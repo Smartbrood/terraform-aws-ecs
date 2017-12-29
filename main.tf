@@ -29,7 +29,7 @@ module "ec2_iam_role" {
    force_detach_policies = false
 
    policy_arn = [
-        "arn:aws:iam::aws:policy/AmazonEC2ReadOnlyAccess",
+        "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role",
    ]
 }
 
