@@ -49,6 +49,9 @@ module "ecs_public_a" {
     monitoring                  = false
 
     root_block_device      = [{ delete_on_termination = false }]
+    ebs_block_device       = [{ delete_on_termination = false 
+                                device_name = "/dev/xvdcz"
+                              }]
 
     user_data            = "${data.template_file.user_data_public.rendered}"
 
@@ -71,6 +74,9 @@ module "ecs_public_b" {
     monitoring                  = false
 
     root_block_device      = [{ delete_on_termination = false }]
+    ebs_block_device       = [{ delete_on_termination = false 
+                                device_name = "/dev/xvdcz"
+                              }]
 
     user_data            = "${data.template_file.user_data_public.rendered}"
 
@@ -93,6 +99,9 @@ module "ecs_public_c" {
     monitoring                  = false
 
     root_block_device      = [{ delete_on_termination = false }]
+    ebs_block_device       = [{ delete_on_termination = false 
+                                device_name = "/dev/xvdcz"
+                              }]
 
     user_data            = "${data.template_file.user_data_public.rendered}"
 
