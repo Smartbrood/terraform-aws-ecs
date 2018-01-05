@@ -2,6 +2,16 @@ variable "cluster_name" {
   description = "ECS cluster Name"
 }
 
+variable "ami_update" {
+  description = "Auto discover latest ami id."
+  default     = "false"
+}
+
+variable "ami" {
+  description = "ami id"
+  default     = ""
+}
+
 variable "security_group" {
   description = "The ID of security group."
 }

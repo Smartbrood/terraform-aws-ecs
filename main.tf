@@ -41,7 +41,7 @@ module "ecs_public_a" {
     key_name             = "${var.key_name}"
     subnet_id            = "${var.subnet_public_zone_a}"
 
-    ami                  = "${module.ecs_ami.ami_id}"
+    ami                  = "${var.ami_update ? module.ecs_ami.ami_id : var.ami }"
     iam_instance_profile = "${module.ec2_iam_role.profile_name}"
     vpc_security_group_ids      = ["${var.security_group}"]
 
@@ -66,7 +66,7 @@ module "ecs_public_b" {
     key_name             = "${var.key_name}"
     subnet_id            = "${var.subnet_public_zone_b}"
 
-    ami                  = "${module.ecs_ami.ami_id}"
+    ami                  = "${var.ami_update ? module.ecs_ami.ami_id : var.ami }"
     iam_instance_profile = "${module.ec2_iam_role.profile_name}"
     vpc_security_group_ids      = ["${var.security_group}"]
 
@@ -91,7 +91,7 @@ module "ecs_public_c" {
     key_name             = "${var.key_name}"
     subnet_id            = "${var.subnet_public_zone_c}"
 
-    ami                  = "${module.ecs_ami.ami_id}"
+    ami                  = "${var.ami_update ? module.ecs_ami.ami_id : var.ami }"
     iam_instance_profile = "${module.ec2_iam_role.profile_name}"
     vpc_security_group_ids      = ["${var.security_group}"]
 
